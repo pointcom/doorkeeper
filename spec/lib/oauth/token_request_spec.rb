@@ -52,7 +52,7 @@ module Doorkeeper::OAuth
       before do
         Doorkeeper.configure do
           orm DOORKEEPER_ORM
-          custom_access_token_expires_in do |_oauth_client|
+          custom_access_token_expires_in do |_oauth_client, _grant_type|
             1234
           end
         end

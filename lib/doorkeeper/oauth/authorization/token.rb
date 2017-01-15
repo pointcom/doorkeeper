@@ -9,8 +9,8 @@ module Doorkeeper
           @resource_owner = resource_owner
         end
 
-        def self.access_token_expires_in(server, pre_auth_or_oauth_client)
-          if expiration = custom_expiration(server, pre_auth_or_oauth_client)
+        def self.access_token_expires_in(server, pre_auth_or_oauth_client, grant_type_name = false)
+          if expiration = custom_expiration(server, pre_auth_or_oauth_client, grant_type_name)
             expiration
           else
             server.access_token_expires_in
@@ -37,14 +37,14 @@ module Doorkeeper
 
         private
 
-        def self.custom_expiration(server, pre_auth_or_oauth_client)
+        def self.custom_expiration(server, pre_auth_or_oauth_client, grant_type_name)
           oauth_client = if pre_auth_or_oauth_client.respond_to?(:client)
                            pre_auth_or_oauth_client.client
                          else
                            pre_auth_or_oauth_client
                          end
 
-          server.custom_access_token_expires_in.call(oauth_client)
+          server.custom_access_token_expires_in.call(oauth_client, grant_type_name)
         end
 
         def configuration

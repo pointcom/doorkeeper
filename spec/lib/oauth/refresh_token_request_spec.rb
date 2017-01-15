@@ -8,7 +8,7 @@ module Doorkeeper::OAuth
     let(:server) do
       double :server,
              access_token_expires_in: 2.minutes,
-             custom_access_token_expires_in: -> (_oauth_client) { nil }
+             custom_access_token_expires_in: -> (_oauth_client, _grant_type) { nil }
     end
     let(:refresh_token) do
       FactoryGirl.create(:access_token, use_refresh_token: true)
@@ -26,7 +26,7 @@ module Doorkeeper::OAuth
     it 'issues a new token for the client with custom expires_in' do
       server = double :server,
                       access_token_expires_in: 2.minutes,
-                      custom_access_token_expires_in: ->(_oauth_client) { 1234 }
+                      custom_access_token_expires_in: ->(_oauth_client, _grant_type) { 1234 }
 
       allow(Doorkeeper::AccessToken).to receive(:refresh_token_revoked_on_use?).and_return(false)
 
@@ -74,7 +74,7 @@ module Doorkeeper::OAuth
       let(:server) do
         double :server,
                access_token_expires_in: 2.minutes,
-               custom_access_token_expires_in: ->(_oauth_client) { 1234 }
+               custom_access_token_expires_in: ->(_oauth_client, _grant_type) { 1234 }
       end
 
       before do

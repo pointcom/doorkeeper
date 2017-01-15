@@ -34,7 +34,7 @@ module Doorkeeper
           client,
           resource_owner_id,
           scopes,
-          Authorization::Token.access_token_expires_in(server, client),
+          Authorization::Token.access_token_expires_in(server, client, grant_type_name),
           server.refresh_token_enabled?)
       end
 
@@ -42,6 +42,11 @@ module Doorkeeper
       end
 
       def after_successful_response
+      end
+
+      def grant_type_name
+        regexp = /^([a-z]+(?:_[a-z]+)?)(?:_access_token)?_request$/
+        self.class.to_s.demodulize.underscore.gsub(regexp, '\1')
       end
     end
   end
